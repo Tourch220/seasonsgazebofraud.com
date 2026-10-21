@@ -338,6 +338,61 @@ section:last-child { border-bottom: none; }
 }
 .cta-email:hover { background: var(--red); color: #fff; }
 
+/* PHOTO GALLERY */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+@media (max-width: 768px) {
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .g-item:last-child:nth-child(odd) { grid-column: 1 / -1; aspect-ratio: 4 / 3; }
+}
+.g-item {
+  position: relative;
+  display: block;
+  background: var(--black);
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  text-decoration: none;
+}
+.g-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s, opacity 0.3s;
+  opacity: 0.92;
+}
+.g-item:hover img, .g-item:focus-visible img { transform: scale(1.03); opacity: 1; }
+.g-item:focus-visible { outline: 2px solid var(--red); outline-offset: -2px; }
+.g-cap {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 28px 14px 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  line-height: 1.5;
+  color: #ddd;
+  background: linear-gradient(to top, rgba(13,13,13,0.9), rgba(13,13,13,0));
+}
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(13,13,13,0.94);
+  cursor: zoom-out;
+}
+.lightbox.open { display: flex; }
+.lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
 footer {
   text-align: center;
   padding: 40px;
@@ -471,6 +526,48 @@ footer {
     </a>
   </div>
 </section>
+
+<!-- PHOTO GALLERY -->
+<section id="photos">
+  <div class="section-label">Selected photos — 9 of 166</div>
+  <div class="gallery">
+    <a href="photos/photo-01.jpg" class="g-item"><img src="photos/photo-01.jpg" width="1200" height="1600" loading="lazy" alt="Plastic corner connector joining aluminium frame tubes"><span class="g-cap">Frame corner connector (plastic)</span></a>
+    <a href="photos/photo-02.jpg" class="g-item"><img src="photos/photo-02.jpg" width="1200" height="1600" loading="lazy" alt="Broken plastic connector pieces lying on the grass next to the tent leg"><span class="g-cap">Broken plastic leg connector, pieces on the ground</span></a>
+    <a href="photos/photo-03.jpg" class="g-item"><img src="photos/photo-03.jpg" width="1200" height="1600" loading="lazy" alt="Two broken grey plastic connector fragments held in a hand"><span class="g-cap">Broken connector fragments</span></a>
+    <a href="photos/photo-04.jpg" class="g-item"><img src="photos/photo-04.jpg" width="1200" height="1600" loading="lazy" alt="Two broken grey plastic connector fragments in a hand, tent leg in background"><span class="g-cap">Broken connector fragments, second angle</span></a>
+    <a href="photos/photo-09.jpg" class="g-item"><img src="photos/photo-09.jpg" width="1200" height="1600" loading="lazy" alt="Cracked and chipped edge of a grey plastic frame connector"><span class="g-cap">Cracked edge of frame connector</span></a>
+    <a href="photos/photo-05.jpg" class="g-item"><img src="photos/photo-05.jpg" width="1200" height="1600" loading="lazy" alt="Light star-shaped marks on the underside of the blue roof fabric"><span class="g-cap">Marks on roof fabric, seen from inside</span></a>
+    <a href="photos/photo-06.jpg" class="g-item"><img src="photos/photo-06.jpg" width="1200" height="1600" loading="lazy" alt="Roof fabric of the tent seen from inside with creases and light patches"><span class="g-cap">Roof fabric, seen from inside</span></a>
+    <a href="photos/photo-07.jpg" class="g-item"><img src="photos/photo-07.jpg" width="1200" height="1600" loading="lazy" alt="Blue tent fabric with uneven light streaks near a seam"><span class="g-cap">Fabric surface near seam</span></a>
+    <a href="photos/photo-08.jpg" class="g-item"><img src="photos/photo-08.jpg" width="1200" height="1600" loading="lazy" alt="Light patches and scuffs on blue tent fabric next to a seam"><span class="g-cap">Patches on fabric panel</span></a>
+  </div>
+</section>
+
+<div class="lightbox" id="lightbox" aria-hidden="true"><img alt=""></div>
+<script>
+(function () {
+  var lb = document.getElementById('lightbox');
+  if (!lb) return;
+  var big = lb.querySelector('img');
+  document.querySelectorAll('.gallery .g-item').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      big.src = a.getAttribute('href');
+      big.alt = a.querySelector('img').alt;
+      lb.classList.add('open');
+      lb.setAttribute('aria-hidden', 'false');
+    });
+  });
+  function close() {
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden', 'true');
+    big.removeAttribute('src');
+  }
+  lb.addEventListener('click', close);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+})();
+</script>
+
 <section>
   <div class="section-label">Timeline of events</div>
   <div class="timeline">
